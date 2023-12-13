@@ -86,7 +86,6 @@ public class UserDaoJDBCImpl implements UserDao {
             throw new RuntimeException(e);
         }
         return userList;
-
     }
 
     public void cleanUsersTable() {
