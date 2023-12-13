@@ -9,7 +9,7 @@ public class Main {
         UserDao userDao = new UserDaoHibernateImpl();
 
         userDao.createUsersTable();
-//
+
         userDao.saveUser("Gena", "AllIn", (byte) 20);
         userDao.saveUser("Name2", "LastName2", (byte) 25);
         userDao.saveUser("Name3", "LastName3", (byte) 31);
