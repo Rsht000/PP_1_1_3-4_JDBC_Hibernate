@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Properties;
 
 public class Util {
+
         private static final String DB_DRIVER = "com.mysql.cj.jdbc.Driver";
     private static final String DB_URL = "jdbc:mysql://localhost:3306/bazamy";
     private static final String DB_USERNAME = "root";
