@@ -22,62 +22,44 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void createUsersTable() {
-        Transaction transaction = null;
         try (Session session = connectionHiber.openSession()) {
-            transaction = session.beginTransaction();
+            session.beginTransaction();
             Query query = session.createSQLQuery("CREATE TABLE IF NOT EXISTS users " +
                             "(id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY," +
                             "UserName VARCHAR(50) NOT NULL, LastName VARCHAR(50) NOT NULL, " +
                             "AGE TINYINT NOT NULL)")
                     .addEntity(User.class);
             query.executeUpdate();
-            transaction.commit();
+            session.getTransaction().commit();
         } catch (HibernateException e) {
             e.printStackTrace();
-            if (transaction != null) {
-                transaction.rollback();
-            }
-        }
 
+        }
     }
 
     @Override
     public void dropUsersTable() {
-        Session session = connectionHiber.openSession();
-        Transaction transaction = session.beginTransaction();
-        try {
+
+        try(Session session = connectionHiber.openSession();){
+            session.beginTransaction();
             Query query = session.createSQLQuery("DROP TABLE  IF EXISTS users")
                     .addEntity(User.class);
             query.executeUpdate();
-            transaction.commit();
+            session.getTransaction().commit();
         } catch (HibernateException e) {
             e.printStackTrace();
-            if (transaction != null) {
-                transaction.rollback();
-            }
-        } finally {
-            session.close();
         }
-
     }
 
     @Override
     public void saveUser(String name, String lastName, byte age) {
-        Session session = connectionHiber.openSession();
-        Transaction transaction = session.beginTransaction();
-        try {
+        try(Session session = connectionHiber.openSession();) {
+            session.beginTransaction();
             session.save(new User(name, lastName, age));
-            transaction.commit();
+            session.getTransaction().commit();
         } catch (HibernateException e) {
             e.printStackTrace();
-            if (transaction != null) {
-                transaction.rollback();
-            }
-        } finally {
-            session.close();
         }
-
-
     }
 
     @Override
@@ -109,9 +91,11 @@ public class UserDaoHibernateImpl implements UserDao {
     public void cleanUsersTable() {
         try(Session session = connectionHiber.getCurrentSession()) {
             session.beginTransaction();
-            session.createSQLQuery("TRUNCATE users ")
+            session.createNativeQuery("TRUNCATE users")
                     .executeUpdate();
             session.getTransaction().commit();
+        } catch (HibernateException e) {
+            e.printStackTrace();
         }
 
     }
